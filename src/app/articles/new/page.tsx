@@ -24,8 +24,11 @@ function CreateNewPage() {
             type='text'
             id='url'
             className='shadow border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none'
-            {...register('url')}
+            {...register('url', { required: 'URLの入力が必要です' })}
           />
+          {errors.url?.message && (
+            <div className='text-red-600'>{errors.url.message.toString()}</div>
+          )}
         </div>
         <div className='mb-4'>
           <label htmlFor='' className='text-gray-700 text-sm font-bold mb-2'>
