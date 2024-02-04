@@ -1,14 +1,24 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+// validation schema
+const schema = z.object({
+  url: z.string().url({ message: 'URLの形式が正しくありません' }),
+  title: z.string().min(1, { message: '1文字以上を入力する必要があります' }),
+})
 
 function CreateNewPage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    resolver: zodResolver(schema),
+  })
 
   const onSubmit = (data) => console.log(data)
 
@@ -24,7 +34,7 @@ function CreateNewPage() {
             type='text'
             id='url'
             className='shadow border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none'
-            {...register('url', { required: 'URLの入力が必要です' })}
+            {...register('url')}
           />
           {errors.url?.message && (
             <div className='text-red-600'>{errors.url.message.toString()}</div>
@@ -40,7 +50,9 @@ function CreateNewPage() {
             className='shadow border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none'
             {...register('title', { required: true })}
           />
-          {errors.title && <div className='text-red-600'>タイトルの入力が必要です</div>}
+          {errors.title?.message && (
+            <div className='text-red-600'>{errors.title.message.toString()}</div>
+          )}
         </div>
         <div className='mb-4'>
           <label htmlFor='' className='text-gray-700 text-sm font-bold mb-2'>
