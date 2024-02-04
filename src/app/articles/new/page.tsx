@@ -1,5 +1,6 @@
 'use client'
 
+import { createArticle } from '@/blogAPI'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,6 +10,7 @@ import * as z from 'zod'
 const schema = z.object({
   url: z.string().url({ message: 'URLの形式が正しくありません' }),
   title: z.string().min(1, { message: '1文字以上を入力する必要があります' }),
+  content: z.string().nullable(),
 })
 
 function CreateNewPage() {
@@ -20,7 +22,11 @@ function CreateNewPage() {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = (data) => console.log(data)
+  const onSubmit = async (data) => {
+    const id = `${data.tittle}-${new Date().getTime().toString()}`
+
+    createArticle(id, data.title, data.content)
+  }
 
   return (
     <div className='min-h-screen py-8 px-4 md:px-12'>
